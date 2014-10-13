@@ -2,7 +2,7 @@ require "socket"
 
 message = ARGV[0]
 
-s = TCPSocket.open("localhost", 2628)
+s = TCPSocket.open("localhost", 2629)
 s.puts(message)
 
 while line = s.gets

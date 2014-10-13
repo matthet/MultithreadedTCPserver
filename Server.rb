@@ -40,7 +40,7 @@ end
 
 # Start Server, Receive Client Message, Process, Reply to Client.
 if $0 == __FILE__
-  server = TCPServer.open(2628)
+  server = TCPServer.open(2629)
   p = Pool.new(10)
 
   loop do
