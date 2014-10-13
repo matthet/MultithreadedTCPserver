@@ -36,19 +36,27 @@ class Pool
   end
 end
 
-# Demonstration
-# -------------
-# Running this file will display how the thread pool works.
+# Execute
+# This will demonstrate a 
 if $0 == __FILE__
-    server = TCPServer.open(2626)
-    p = Pool.new(10)
+  server = TCPServer.open(2626)
+  p = Pool.new(10)
 
-loop do
+  loop do
     p.schedule(server.accept) do |client|
-        client.puts("Job #{i} finished by thread #{Thread.current[:id]}")
+      message = client.gets
+      if message == "HELO Tara\n"
+        client.puts("HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]")
         client.close
+      elsif message == "KILL_SERVICE\n"
+        client.puts("Service Killed")
+        client.close
+      else
+        client.puts("Aw you put your own message! I'm just going to say Hey! Bye..")
+        client.close
+      end
     end
-end
+  end
 
   at_exit { p.shutdown }
 end
