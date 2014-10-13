@@ -1,3 +1,4 @@
+
 require 'thread'
 require "socket"
 
@@ -6,11 +7,14 @@ class Pool
   def initialize(size)
     @size = size
     @jobs = Queue.new
-    
+
+    # Each thread store its’ index in a thread-local variable, in case we
+    # need to know which thread a job is executing in later on.  
     @pool = Array.new(@size) do |i|
       Thread.new do
         Thread.current[:id] = i
 
+	# Shutdown of threads
         catch(:exit) do
           loop do
             job, args = @jobs.pop
@@ -21,9 +25,7 @@ class Pool
     end
   end
   
-  # ### Work scheduling  
-  # To schedule a piece of work to be done is to say to the `Pool` that you
-  # want something done.
+  # Tell the Pool that there is work to be done. 
   def schedule(*args, &block)
     @jobs << [block, args]
   end
@@ -36,20 +38,20 @@ class Pool
   end
 end
 
-# Execute
-# This will demonstrate a 
+# Start Server, Receive Client Message, Process, Reply to Client.
 if $0 == __FILE__
-  server = TCPServer.open(2626)
+  server = TCPServer.open(2628)
   p = Pool.new(10)
 
   loop do
     p.schedule(server.accept) do |client|
       message = client.gets
       if message == "HELO Tara\n"
-        client.puts("HELO text\nIP:[ip address]\nPort:[port number]\nStudentID:[your student ID]")
+        client.puts("HELO Tara\nIP: Code not implemented\nPort: 2626\nStudentID: 11374331")
         client.close
       elsif message == "KILL_SERVICE\n"
         client.puts("Service Killed")
+	server.close
         client.close
       else
         client.puts("Aw you put your own message! I'm just going to say Hey! Bye..")
@@ -57,6 +59,6 @@ if $0 == __FILE__
       end
     end
   end
-
+  server.close
   at_exit { p.shutdown }
 end
