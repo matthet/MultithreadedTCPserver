@@ -46,8 +46,8 @@ if $0 == __FILE__
     p.schedule(server.accept) do |client|
       sock_domain, remote_port, remote_hostname, remote_ip = client.peeraddr
       message = client.gets
-      if message == "HELO Tara\n"
-          client.puts("HELO Tara\nRemote IP: #{remote_ip}\nPort: 2626\nStudentID: 11374331")
+      if message == "HELO text\n"
+          client.puts"HELO text\nIP: #{remote_ip}\nPort: #{remote_port}\nStudentID: 11374331"
           client.close
         elsif message == "KILL_SERVICE\n"
           client.puts("Service Killed")
