@@ -1,4 +1,3 @@
-
 require 'thread'
 require "socket"
 
@@ -45,17 +44,17 @@ if $0 == __FILE__
 
   loop do
     p.schedule(server.accept) do |client|
+      remote_ip = client.peeraddr,
       message = client.gets
       if message == "HELO Tara\n"
-        client.puts("HELO Tara\nIP: Code not implemented\nPort: 2626\nStudentID: 11374331")
-        client.close
-      elsif message == "KILL_SERVICE\n"
-        client.puts("Service Killed")
-	server.close
-        client.close
-      else
-        client.puts("Aw you put your own message! I'm just going to say Hey! Bye..")
-        client.close
+          client.puts("HELO Tara\nRemote IP: #{remote_ip}\nPort: 2626\nStudentID: 11374331")
+          client.close
+        elsif message == "KILL_SERVICE\n"
+          client.puts("Service Killed")
+          client.close
+        else
+          client.puts("Aw you put your own message! I'm just going to say Hey! Bye..")
+          client.close
       end
     end
   end
