@@ -39,7 +39,10 @@ end
 
 # Start Server, Receive Client Message, Process, Reply to Client.
 if $0 == __FILE__
-  server = TCPServer.open(2631)
+  port = 2631
+  host_ip = Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address
+
+  server = TCPServer.new(host_ip, port)
   p = Pool.new(10)
 
   loop do
@@ -47,7 +50,7 @@ if $0 == __FILE__
       sock_domain, remote_port, remote_hostname, remote_ip = client.peeraddr
       message = client.gets
       if message[0..3] == "HELO"
-          client.puts"#{message}IP: #{remote_ip}\nPort: #{remote_port}\nStudentID: 11374331"
+          client.puts"#{message}IP:#{host_ip}\nPort:#{port}\nStudentID:11374331"
           client.close
         elsif message == "KILL_SERVICE\n"
           client.puts("Service Killed")
