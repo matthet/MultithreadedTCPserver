@@ -47,7 +47,6 @@ if $0 == __FILE__
 
   loop do
     p.schedule(server.accept) do |client|
-      sock_domain, remote_port, remote_hostname, remote_ip = client.peeraddr
       message = client.gets
       if message[0..3] == "HELO"
           client.puts"#{message}IP:#{host_ip}\nPort:#{port}\nStudentID:11374331"
